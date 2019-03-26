@@ -155,11 +155,11 @@
 - (NSArray *)getReadPermsArrayFromOptions:(NSArray *)options {
     NSDictionary *readPermDict = [self readPermsDict];
     NSMutableArray *readPermArray = [NSMutableArray arrayWithCapacity:1];
-    
+
     for(int i=0; i<[options count]; i++) {
         NSString *optionKey = options[i];
         HKObjectType *val = [readPermDict objectForKey:optionKey];
-        
+
         if(val != nil) {
             [readPermArray addObject:val];
         }
@@ -171,14 +171,14 @@
 - (NSArray *)getWritePermsArrayFromOptions:(NSArray *)options {
     NSDictionary *writePermDict = [self writePermsDict];
     NSMutableArray *writePermArray = [NSMutableArray arrayWithCapacity:1];
-    
+
     for(int i=0; i<[options count]; i++) {
         NSString *optionKey = options[i];
         HKObjectType *val = [writePermDict objectForKey:optionKey];
         if(val != nil) {
             [writePermArray addObject:val];
         }
-        
+
     }
     return writePermArray;
 }
@@ -255,6 +255,7 @@ NSString * const WheelchairRunPace = @"WheelchairRunPace";
 NSString * const TaiChi = @"TaiChi";
 NSString * const MixedCardio = @"MixedCardio";
 NSString * const HandCycling = @"HandCycling";
+NSString * const Other = @"Other";
 
 + (NSDictionary *)getStringToWorkoutActivityTypeDictionary {
     return @{
@@ -329,7 +330,8 @@ NSString * const HandCycling = @"HandCycling";
              WheelchairRunPace: @(HKWorkoutActivityTypeWheelchairRunPace),
              TaiChi: @(HKWorkoutActivityTypeTaiChi),
              MixedCardio: @(HKWorkoutActivityTypeMixedCardio),
-             HandCycling: @(HKWorkoutActivityTypeHandCycling)
+             HandCycling: @(HKWorkoutActivityTypeHandCycling),
+             Other: @(HKWorkoutActivityTypeOther)
              };
 }
 
@@ -406,7 +408,8 @@ NSString * const HandCycling = @"HandCycling";
              @(HKWorkoutActivityTypeWheelchairRunPace) : WheelchairRunPace,
              @(HKWorkoutActivityTypeTaiChi) : TaiChi,
              @(HKWorkoutActivityTypeMixedCardio) : MixedCardio,
-             @(HKWorkoutActivityTypeHandCycling) : HandCycling
+             @(HKWorkoutActivityTypeHandCycling) : HandCycling,
+             @(HKWorkoutActivityTypeOther) : Other
              };
 }
 

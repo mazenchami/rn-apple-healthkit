@@ -442,7 +442,7 @@
                        ascending: (BOOL)ascending
                            limit:(NSUInteger)limit
                       completion:(void (^)(NSArray *, NSError *))completion {
-    
+
     void (^handlerBlock)(HKSampleQuery *query, NSArray *results, NSError *error);
     NSSortDescriptor *endDateSortDescriptor = [[NSSortDescriptor alloc] initWithKey:HKSampleSortIdentifierEndDate ascending:ascending];
     handlerBlock = ^(HKSampleQuery *query, NSArray *results, NSError *error) {
@@ -456,17 +456,20 @@
         if(completion) {
             NSMutableArray *data = [NSMutableArray arrayWithCapacity:1];
             NSDictionary *numberToWorkoutNameDictionary = [RCTAppleHealthKit getNumberToWorkoutNameDictionary];
-            
+
             dispatch_async(dispatch_get_main_queue(), ^{
                 for (HKWorkout * sample in results) {
                     double energy = [[sample totalEnergyBurned] doubleValueForUnit:[HKUnit kilocalorieUnit]];
                     double distance = [[sample totalDistance] doubleValueForUnit:[HKUnit mileUnit]];
+                    NSTimeInterval duration = [sample duration];
                     NSNumber *activityNumber =  [NSNumber numberWithInt: [sample workoutActivityType]];
-                    
+
                     NSDictionary *elem = @{
                                            @"activityName" : [numberToWorkoutNameDictionary objectForKey: activityNumber],
                                            @"calories" : @(energy),
                                            @"distance" : @(distance),
+                                           @"duration" : @(duration),
+                                           @"sourceName" : [[[sample sourceRevision] source] name],
                                            @"start" : [RCTAppleHealthKit buildISO8601StringFromDate:sample.startDate],
                                            @"end" : [RCTAppleHealthKit buildISO8601StringFromDate:sample.endDate]
                                            };
@@ -474,21 +477,21 @@
                 }
                 completion(data, error);
             });
-            
+
         }
     };
-    
+
     HKSampleQuery *query = [[HKSampleQuery alloc] initWithSampleType:[HKObjectType workoutType] predicate:predicate limit:limit sortDescriptors:@[endDateSortDescriptor] resultsHandler:handlerBlock];
-    
+
     [self.healthStore executeQuery:query];
-    
+
 }
 
 - (void)fetchCholesterolForPredicate: (NSPredicate *)predicate
                            ascending: (BOOL)ascending
                                limit:(NSUInteger)limit
                           completion:(void (^)(NSArray *, NSError *))completion {
-    
+
     void (^handlerBlock)(HKSampleQuery *query, NSArray *results, NSError *error);
     NSSortDescriptor *endDateSortDescriptor = [[NSSortDescriptor alloc] initWithKey:HKSampleSortIdentifierEndDate ascending:ascending];
     handlerBlock = ^(HKSampleQuery *query, NSArray *results, NSError *error) {
@@ -498,7 +501,7 @@
             }
             return;
         }
-        
+
         if(completion) {
             NSMutableArray *data = [NSMutableArray arrayWithCapacity:1];
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -513,14 +516,14 @@
                 }
                 completion(data, error);
             });
-            
+
         }
     };
-    
+
     HKSampleQuery *query = [[HKSampleQuery alloc] initWithSampleType:[HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierDietaryCholesterol] predicate:predicate limit:limit sortDescriptors:@[endDateSortDescriptor] resultsHandler:handlerBlock];
-    
+
     [self.healthStore executeQuery:query];
-    
+
 }
 
 @end
