@@ -471,7 +471,8 @@
                                            @"duration" : @(duration),
                                            @"sourceName" : [[[sample sourceRevision] source] name],
                                            @"start" : [RCTAppleHealthKit buildISO8601StringFromDate:sample.startDate],
-                                           @"end" : [RCTAppleHealthKit buildISO8601StringFromDate:sample.endDate]
+                                           @"end" : [RCTAppleHealthKit buildISO8601StringFromDate:sample.endDate],
+                                           @"uuid": [sample.UUID UUIDString],
                                            };
                     [data addObject:elem];
                 }
